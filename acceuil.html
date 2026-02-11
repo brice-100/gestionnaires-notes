@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="ges.css">
+    <title>Acceuil</title>
+</head>
+<body>
+    <div class="home-page" id="homePage">
+    <div class="container">
+        <header>
+        <h1>Gestionnaire des notes</h1>
+        <p class="subtitle">
+                Une plateforme moderne et intuitive pour la gestion des notes, le suivi académique et la communication entre enseignants, élèves.
+            </p>
+        </header>
+       <section class="cadre-grid">
+          <div class="card"> 
+            <div class="card-icon">👨‍🎓</div>
+              <h2 class="titre"> Espace élève</h2>
+                <p class="description">Accédez à vos notes et consultez vos notes en temps réel</p>
+            <button  onclick="showAuth('eleve')" id="eleve"> Je suis élève </button>
+       </div>
+        <div class="card"> 
+             <div class="card-icon">📊</div>
+                <h2 class="titre"> Espace Enseignant </h2>
+                 <p class="description">saisissez les notes, gérez vos classes</p>
+            <button  onclick="showAuth('enseignant')" id="enseignant"> Je suis enseignant</button>
+       </div>
+        </section>
+    </div>
+    
+</div>
+    <!-- PAGE AUTHENTIFICATION ÉLÈVE -->
+     <div class="auth-page" id="eleveAuthPage">
+        <div class="auth-container">
+            <div class="auth-header">
+                <button class="back-button" onclick="backToHome()"> Retour</button>
+                <h1>👨‍🎓 Espace élève</h1>
+            </div>
+            <div class="auth-content">
+                <div class="form-tabs">
+                    <button class="form-tab active" onclick="switchTab('login',  'eleve')">Connexion</button>
+                    <button class="form-tab " onclick="switchTab('register' , 'eleve')" >S'inscrire</button>
+                </div>
+                <div class="form-content active" id="eleve-login">
+                    <div id="eleve-login-error" class="error-message"></div>
+                    <form onsubmit="handleEleveLogin(event)">
+                        <div class="form-group">
+                            <label for="login-email-eleve">Email</label>
+                            <input type="text"  id="login-email-eleve" placeholder="entrez votre email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password-eleve"> Mot de passe</label>
+                            <input type="password" id="login-password-eleve" placeholder=".........." required>
+                        </div>
+                        <button type="submit" class="form-button"> Se connecter</button>
+                    </form>
+                    
+                </div>
+                 <div class="form-content" id="eleve-register">
+                    <div id="eleve-register-error" class="error-message"></div>
+                    <div id="eleve-register-success" class="success-message"></div>
+                    <form onsubmit="handleEleveRegister(event)" id="eleve-register-form">
+                        <div class="form-group">
+                            <label for="registrer-nom-eleve">Nom</label>
+                            <input type="text" id="register-nom-eleve" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-prenom-eleve">Prénom</label>
+                            <input type="text" id="register-prenom-eleve" placeholder="Votre prenom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-classe-eleve">Choisissez votre classe</label>
+                            <select id="register-classe-eleve" required>
+                                <option value="">Sélectionner votre classe</option>
+                                <option value="6ème A">6ème A</option>
+                                <option value="6ème B">6ème B</option>
+                                <option value="5ème A">5ème A</option>
+                                <option value="5ème B">5ème B</option>
+                                <option value="4ème A">4ème A</option>
+                                <option value="4ème B">4ème B</option>
+                                <option value="3ème A">3ème A</option>
+                                <option value="3ème B">3ème B</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email-eleve">Email</label>
+                            <input type="text" id="register-email-eleve" placeholder="Votre email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password-eleve">Mot de passe</label>
+                            <input type="password" id="register-password-eleve" placeholder="........" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password-confirm-eleve">Confirmer le mot de passe</label>
+                            <input type="password" id="register-password-confirm-eleve" placeholder="........." required>
+                        </div>
+                        <button type="submit" class="form-button">S'inscrire</button>
+                    </form>
+                 </div>
+            </div>
+        </div>
+     </div>
+     <!--PAGE AUTHENTIFICATION ENSEIGNANT--> 
+     <div class="auth-page" id="enseignantAuthPage">
+        <div class="auth-container">
+            <div class="auth-header">
+                <button class="back-button" onclick="backToHome()">Retour</button>
+                <h1>📊 Espace Enseignant</h1>
+            </div>
+            <div class="auth-content">
+                <div class="form-tabs">
+                    <button class="form-tab active" onclick="switchTab('login' , 'enseignant')">Connexion</button>
+                    <button class="form-tab" onclick="switchTab('register' , 'enseignant')">S'inscrire</button>
+                </div>
+                <div class="form-content active" id="enseignant-login">  
+                    <div id="enseignant-login-error" class="error-message"></div>
+                        <form onsubmit="handleEnseignantLogin(event)"">
+                            <div class="form-group">
+                                 <label for="login-email-enseignant">Email</label>
+                                 <input type="text"  id="login-email-enseignant" placeholder="entrez votre email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password-enseignant"> Mot de passe</label>
+                                <input type="password" id="login-password-enseignant" placeholder=".........." required>
+                            </div>
+                            <button type="submit" class="form-button">Se connecter</button>
+                        </form>
+                          
+                </div>
+                </div>
+                <div class="form-content" id="enseignant-register">
+                    <div id="enseignant-register-error" class="error-message"></div>
+                    <div id="enseignant-register-success" class="success-message"></div>
+                    <form onsubmit="handleEnseignantRegister(event)" id="enseignant-register-form">
+                        <div class="form-group">
+                            <label for="registrer-nom-enseignant">Nom</label>
+                            <input type="text" id="register-nom-enseignant" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-prenom-enseignant">Prénom</label>
+                            <input type="text" id="register-prenom-enseignant" placeholder="Votre prenom" required>
+                        </div>
+                        <div class="form-group">
+                              <label for="register-email-enseignant">Email</label>
+                              <input type="text"  id="register-email-enseignant" placeholder="entrez votre email.com" required>
+                        </div>
+                        <div class="form-group">
+                              <label for="register-subject-enseignant">Matière enseignée</label>
+                                <select name="matière" id="register-subject-enseignant" required>
+                                    <option value="Mathématiques">Mathématiques</option>
+                                    <option value="Français">Français</option>
+                                    <option value="Anglais">Anglais</option>
+                                    <option value="Sciences">Sciences</option>
+                                    <option value="Histoire">Histoire</option>
+                                    <option value="Géographie">Géographie</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label> Choisissez votre(vos) classe(s)</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label  style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="6ème A">6ème A
+                                </label>
+                                 <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="6ème B"> 6ème B
+                                </label>
+                                <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="5ème A"> 5ème A
+                                </label>
+                                <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="5ème B"> 5ème B
+                                </label>
+                                <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="4ème A"> 4ème A
+                                </label>
+                                  <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="4ème B"> 4ème B
+                                </label>
+                                <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="3ème B"> 3ème B
+                                </label>
+                                <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
+                                    <input type="checkbox" name="classes" value="3ème A"> 3ème A
+                                </label>
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="register-password-enseignant"> Mot de passe</label>
+                             <input type="password" id="register-password-enseignant" placeholder=".........." required>
+                        </div>
+                         <div class="form-group">
+                            <label for="register-password-confirm-enseignant">Confirmer le mot de passe</label>
+                            <input type="password" id="register-password-confirm-enseignant" placeholder="........." required>
+                        </div>
+                        <button type="submit" class="form-button"> S'inscrire</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--DASHBOARD ENSEIGNANT-->
+    <div class="teacher-dashboard" id="teacherDashboard">
+        <div class="dashboard-header">
+            <div>
+                <h1>📊 Dashboard Enseignant</h1>
+                <p id="teacher-name" style="margin-top: 10px; opacity:0.9">Bienvenue</p>
+            </div>
+                <p id="teacherName" style="margin-top: 10px; opacity:0.9">Bienvenue</p>
+                <p id="student-name"  style="margin-top: 10px; opacity:0.9">Bienvenue</p>
+                <p id="studentName"  style="margin-top: 10px; opacity:0.9">Bienvenue</p>
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        </div>
+        <div class="teacher-content">
+            <div class="class-tabs" id="classTabsTeacher"></div>
+            <div class="subject-section">
+                <div class="subject-header">
+                    <h2 id="subject-title">Gérer les notes</h2>
+                </div>
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>classe</th>
+                            <th>Note1</th>
+                            <th>Note2</th>
+                            <th>Historique</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-tbody">
+                        
+                        <tr>
+                            <td colspan="5" style="text-align:center;color:#999;">Aucun élève inscrit pour le moment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Dashboard eleve-->
+    <div class="student-dashboard" id="studentDashboard">
+        <div class="Dashboard-header">
+            <div>
+                <h1>📈 Dashboard Elève</h1>
+                <h1>📈 Mes Notes</h1>
+                <p id="student-name"  style="margin-top: 10px; opacity:0.9">Bienvenue</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+            <div class="class-selector">
+            <h3>📚 Ma classe: <span id="myClass" style="color: #667eea;"></span></h3>
+        </div>
+        </div>
+        <div class="grades-grid" id="gradesGrid">
+            <div class="no-grades">Aucune note pour le moment</div>
+        </div>
+    </div>
+     <!-- MODAL HISTORIQUE -->
+    <div class="history-overlay" id="historyOverlay" onclick="closeHistory()"></div>
+    <div class="history-popup" id="historyPopup">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+            <h3>Historique des Notes</h3>
+            <button onclick="closeHistory()" style="background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
+        </div>
+        <div id="historyContent" style="max-height: 400px; overflow-y: auto;">
+            <!-- Historique sera inséré ici -->
+        </div>
+    </div>
+    <script type="module" src="acceuil.js"></script>
+</body>
+</html>
