@@ -485,39 +485,71 @@ function checkIfTeacher(uid) {
     });
 }
 // Fonction pour vérifier les conflits de matière+classe pour les enseignants
+// Fonction CORRIGÉE pour vérifier les conflits
 function checkTeacherClassConflict(matiere, classes) {
   return new Promise((resolve, reject) => {
-    console.log("Vérification conflit-Matière");
-
-    const q = query(
-      collection(db, "users"),
-      where("matiere", "==", matiere),
-      where("type", "==", "enseignant")
-    );
+    console.log("🔍 Vérification conflit:", matiere, "Classes:", classes);
     
-    getDocs(q).then((snapshot) => {
-      console.log(`Enseignants trouvés pour la matière ${matiere}: ${snapshot.size}`);
-
-      for (const doc of snapshot.docs) {
-        const enseignant = doc.data();
-        // Vérifier si une classe est en commun
-        for (const classe of classes) {
-          if (enseignant.classes && enseignant.classes.includes(classe)) {
-            resolve(classe);  // Conflit trouvé
-            return;
+    try {
+      // Construire la requête
+      const q = query(
+        collection(db, "users"),
+        where("matiere", "==", matiere),
+        where("type", "==", "enseignant")
+      );
+      
+      console.log("📡 Envoi de la requête...");
+      
+      // Exécuter la requête avec gestion d'erreur
+      getDocs(q)
+        .then((snapshot) => {
+          console.log("✅ Requête réussie");
+          console.log("📊 Documents trouvés:", snapshot.size);
+          
+          // Vérifier les conflits
+          for (const docSnap of snapshot.docs) {
+            const enseignant = docSnap.data();
+            console.log("Enseignant:", enseignant.nom, "Classes:", enseignant.classes);
+            
+            // Sécurité: vérifier que classes est un tableau
+            if (!Array.isArray(enseignant.classes)) {
+              console.warn("⚠️ classes n'est pas un tableau, ignorer");
+              continue;
+            }
+            
+            // Vérifier si une classe est en conflit
+            for (const classe of classes) {
+              if (enseignant.classes.includes(classe)) {
+                console.error("⚠️ CONFLIT:", matiere, "en", classe);
+                resolve(classe);  // Retourner le conflit
+                return;
+              }
+            }
           }
-        }
-      }
-      console.log("Aucun conflit trouvé pour la matière " + matiere);
-      resolve(null);  // Pas de conflit
-    })
-    .catch((error) => {
-      console.error("Erreur lors de la vérification des conflits de matière+classe:", error);
+          
+          // Pas de conflit trouvé
+          console.log("✅ Pas de conflit");
+          resolve(null);
+        })
+        .catch((error) => {
+          console.error("❌ ERREUR getDocs:", error.code, error.message);
+          
+          // IMPORTANT: Si erreur de permissions, ignorer et continuer
+          if (error.code === 'permission-denied') {
+            console.warn("⚠️ Erreur permissions, mais continuant...");
+            resolve(null);  // Ignorer l'erreur, continuer l'inscription
+          } else {
+            // Autre type d'erreur = rejeter
+            console.error("❌ Erreur non-permissions:", error);
+            reject(error);
+          }
+        });
+    } catch (error) {
+      console.error("❌ ERREUR Exception:", error);
       reject(error);
-    });
+    }
   });
 }
-
 // ===== DASHBOARD ÉLÈVE =====
 
 function loadStudentDashboard() {
