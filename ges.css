@@ -302,9 +302,17 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
+                       
+        .form-group input,
+        .form-group select {
+         width: 100%;
+         padding: 10px;
+         margin-bottom: 5px;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+        }
         label {
             display: block;
             margin-bottom: 8px;
@@ -378,11 +386,15 @@
         }
 
         .error-message {
-            background: #fee;
+            display: none;
             color: #c33;
+            font-size: 12px;
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+        .error-message.show{
             display: block;
         }
-
         .success-message {
             background: #efe;
             color: #3c3;

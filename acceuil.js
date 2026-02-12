@@ -152,18 +152,21 @@ function handleEleveLogin(event) {
   signInWithEmailAndPassword(authInstance, email, password)
     .then((userCredential) => {
       checkUserType(userCredential.user.uid);
-    })
-    .catch((error) => {
-      errorDiv.textContent = 'Email ou mot de passe incorrect';
-      errorDiv.classList.add("show");
-      
-      
-      setTimeout(() => {
-          button.textContent = originalText;
+         button.textContent = originalText;
         button.classList.remove('btn-loading');
         button.disabled = false;
+    })
+    .catch((error) => {
+      button.textContent = originalText;
+        button.classList.remove('btn-loading');
+        button.disabled = false;
+      errorDiv.textContent = 'Email ou mot de passe incorrect';
+      errorDiv.classList.add("show");
+       
+      
+      setTimeout(() => {
         errorDiv.classList.remove("show");
-      }, 3000);
+      }, 2000);
     });
 }
 
@@ -184,7 +187,7 @@ function handleEleveRegister(event) {
   const successDiv = document.getElementById("eleve-register-success");
   
   
-  errorDiv.classList.remove("show");
+  
   successDiv.classList.remove("show");
   
   const button = event.target.querySelector('button[type="submit"]');
@@ -192,25 +195,36 @@ function handleEleveRegister(event) {
 
   // Validations
   if (password !== confirmPassword) {
-    errorDiv.textContent = 'Les mots de passe ne correspondent pas';
-    errorDiv.classList.add("show");
-    return;
-  }
-  if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
-    errorDiv.textContent = 'Le nom et le prénom doivent contenir uniquement des lettres';
-    errorDiv.classList.add("show");
+    const errorConfirm = document.getElementById("error-register-passwordconfirm-eleve");
+    errorConfirm.textContent = 'Les mots de passe ne correspondent pas ';
+    errorConfirm.classList.add("show");
     return;
   }
   if (!passwordRegex.test(password)) {
-    errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères, dont une lettre et un chiffre';
-    errorDiv.classList.add("show");
+    const errorPassword = document.getElementById("error-register-password-eleve");
+    errorPassword.textContent = 'Le mot de passe doit contenir au moins 8 caractères, dont une lettre et un chiffre';
+    errorPassword.classList.add("show");
+    return;
+  }
+  if (!nameRegex.test(nom)){
+    const errorNom = document.getElementById("error-register-nom-eleve");
+    errorNom.textContent = 'Le nom doit contenir uniquement des lettres';
+    errorNom.classList.add("show");
+    return;
+  }
+  if (!nameRegex.test(prenom)){
+    const errorPrenom = document.getElementById("error-register-prenom-eleve");
+    errorPrenom.textContent = 'Le prénom doit contenir uniquement des lettres';
+    errorPrenom.classList.add("show");
     return;
   }
   if (!emailRegex.test(email)) {
-    errorDiv.textContent = 'Format d\'email invalide';
-    errorDiv.classList.add("show");
+    const errorEmail = document.getElementById("error-register-email-eleve");
+    errorEmail.textContent = 'Format d\'email invalide';
+    errorEmail.classList.add("show");
     return;
-  }
+  } 
+   
   
   button.textContent = '⏳ Inscription en cours...';
   button.classList.add('btn-loading');
@@ -246,21 +260,22 @@ function handleEleveRegister(event) {
       }, 2000);
     })
     .catch((error) => {
-      button.textContent = '❌ Erreur';
-      button.classList.add('btn-error');
+      console.log("Erreur inscription eleve", error);
+          button.textContent = originalText;
+        button.classList.remove('btn-loading', 'btn-error');
+        button.disabled = false;
+
       if (error.code === 'auth/email-already-in-use') {
         errorDiv.textContent = 'Cet email est déjà utilisé';
+      } else if(error.code === 'permission denied') {
+        errorDiv.textContent = 'erreur de permission firestore';
       } else {
         errorDiv.textContent = error.message;
       }
       errorDiv.classList.add("show");
-      
-      
-      setTimeout(() => {
-         button.textContent = originalText;
-        button.classList.remove('btn-loading', 'btn-error');
-        button.disabled = false;
-      }, 5000);
+          setTimeout(() => {
+         errorDiv.classList.remove("show");
+      }, 2000);
     });
 }
 
@@ -279,28 +294,59 @@ function handleEnseignantLogin(event) {
   button.classList.add('btn-loading');
   button.disabled = true;
   
-  
-  errorDiv.classList.remove("show");
-  
   signInWithEmailAndPassword(authInstance, email, password) 
     .then((userCredential) => {
+      checkIfTeacher(userCredential.user.uid)
+      
+        .then((isTeacher) => {
+          if (!isTeacher) {
+            // C'est un élève, pas un enseignant
+            errorDiv.textContent = '❌ Cet email est inscrit comme élève, pas comme enseignant';
+            errorDiv.classList.add("show");
+            button.textContent = originalText;
+            button.classList.remove('btn-loading');
+            button.disabled = false;
+            
+            // Déconnecter l'utilisateur
+            signOut(authInstance);
+            return Promise.reject("Not a teacher");
+          }
       checkUserType(userCredential.user.uid);
-    })
+    });
+     button.textContent = originalText;
+        button.classList.remove('btn-loading');
+        button.disabled = false
+  })
     .catch((error) => {
+            button.textContent = originalText;
+             button.disabled = false;
+        button.classList.remove('btn-loading');
       errorDiv.textContent = 'Email ou mot de passe incorrect';
       errorDiv.classList.add("show");
-      
-      
+
       setTimeout(() => {
-         button.textContent = originalText;
-        button.classList.remove('btn-loading');
-        button.disabled = false;
         errorDiv.classList.remove("show");
       }, 5000);
     });
 }
+//fonction pour verifier que c'est un enseignant 
+function checkIfTeacher(uid) {
+  return new Promise((resolve) => {
+    getDoc(doc(db, "users", uid))
+      .then((docSnap) => {
+        if (docSnap.exists()) {
+          resolve(true);  // C'est dans "users", donc un enseignant
+        } else {
+          resolve(false);  // Pas dans "users", donc un élève
+        }
+      })
+      .catch(() => {
+        resolve(false);
+      });
+  });
+}
 
-function handleEnseignantRegister(event) {
+ function handleEnseignantRegister(event) {
   event.preventDefault();
   
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$/;
@@ -328,36 +374,58 @@ function handleEnseignantRegister(event) {
   
   // Validations
   if (password !== confirmPassword) {
-    errorDiv.textContent = 'Les mots de passe ne correspondent pas';
-    errorDiv.classList.add("show");
+    const errorConfirm = document.getElementById("error-register-passwordconfirm-enseignant");
+    errorConfirm.textContent = 'Les mots de passe ne correspondent pas ';
+    errorConfirm.classList.add("show");
     return;
   }
   if (classes.length === 0) {
-    errorDiv.textContent = 'Veuillez sélectionner au moins une classe';
-    errorDiv.classList.add("show");
+    const errorClasse = document.getElementById("error-register-classe-enseignant");
+    errorClasse.textContent = 'Sélectionner au moins une classe';
+    errorClasse.classList.add("show");
     return;
   }
-  if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
-    errorDiv.textContent = 'Le nom et le prénom doivent contenir uniquement des lettres';
-    errorDiv.classList.add("show");
+  if (!nameRegex.test(nom)){
+   const errorNom = document.getElementById("error-register-nom-enseignant");
+    errorNom.textContent = 'Le nom doit contenir uniquement des lettres';
+    errorNom.classList.add("show");
+    return;
+  }
+   if (!nameRegex.test(prenom)){
+   const errorPrenom = document.getElementById("error-register-prenom-enseignant");
+    errorPrenom.textContent = 'Le prenom doit contenir uniquement des lettres';
+    errorPrenom.classList.add("show");
     return;
   }
   if (!passwordRegex.test(password)) {
-    errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères, dont une lettre et un chiffre';
-    errorDiv.classList.add("show");
+    const errorPassword = document.getElementById("error-register-password-enseignant");
+    errorPassword.textContent = 'Le mot de passe doit contenir au moins 8 caractères, dont une lettre et un chiffre';
+    errorPassword.classList.add("show");
     return;
   }
   if (!emailRegex.test(email)) {
-    errorDiv.textContent = 'Format d\'email invalide';
-    errorDiv.classList.add("show");
+    const errorEmail = document.getElementById("error-register-email-enseignant");
+    errorEmail.textContent = 'Format d\'email invalide';
+    errorEmail.classList.add("show");
     return;
   }
   
-  button.textContent = '⏳ Vérification en cours...';
+  button.textContent = '⏳ Inscription en cours...';
   button.classList.add('btn-loading');
   button.disabled = true;
-      
-   createUserWithEmailAndPassword(authInstance, email, password)
+
+  //fonction qui verifie si matière+classe déjà enseigné par un autre enseignant
+  checkTeacherClassConflict(matiere, classes)
+    .then((conflict) => {
+      if (conflict) {
+        throw new Error( `❌ La matière "${matiere}" est déjà enseignée dans la classe "${conflict}". Choisissez une autre classe.`);
+      }
+    })
+    .then(() => {
+      console.log("Aucun conflit de matière+classe, création du compte enseignant...");
+      return createUserWithEmailAndPassword(authInstance, email, password);
+    })
+
     .then((userCredential) => {
       const uid = userCredential.user.uid;
       const enseignantRef = doc(db, "users", uid);
@@ -394,24 +462,60 @@ function handleEnseignantRegister(event) {
       }, 2000);
     })
     .catch((error) => {
+      console.log("erreur inscription enseignant:" , error);
       //  Erreur
-      button.textContent = '❌ Erreur';
-      button.classList.add('btn-error');
+       button.textContent = originalText;
+        button.classList.remove('btn-loading', 'btn-error');
+        button.disabled = false;
       
       if (error.code === 'auth/email-already-in-use') {
         errorDiv.textContent = 'Cet email est déjà utilisé';
+      } else if(error.message.includes('déjà enseignée')) {
+        errorDiv.textContent = error.message;
+      } else if(error.code === 'permission denied') {
+      errorDiv.textContent = 'erreur de permission firestore'
       } else {
         errorDiv.textContent = error.message;
       }
       errorDiv.classList.add("show");
-      
-      setTimeout(() => {
-        // ✅ Réinitialiser le bouton
-        button.textContent = originalText;
-        button.classList.remove('btn-loading', 'btn-error');
-        button.disabled = false;
-      }, 3000);
+
+        setTimeout(() => {
+       errorDiv.classList.add("show");
+      }, 2000);
     });
+}
+// Fonction pour vérifier les conflits de matière+classe pour les enseignants
+function checkTeacherClassConflict(matiere, classes) {
+  return new Promise((resolve, reject) => {
+    console.log("Vérification conflit-Matière");
+
+    const q = query(
+      collection(db, "users"),
+      where("matiere", "==", matiere),
+      where("type", "==", "enseignant")
+    );
+    
+    getDocs(q).then((snapshot) => {
+      console.log(`Enseignants trouvés pour la matière ${matiere}: ${snapshot.size}`);
+
+      for (const doc of snapshot.docs) {
+        const enseignant = doc.data();
+        // Vérifier si une classe est en commun
+        for (const classe of classes) {
+          if (enseignant.classes && enseignant.classes.includes(classe)) {
+            resolve(classe);  // Conflit trouvé
+            return;
+          }
+        }
+      }
+      console.log("Aucun conflit trouvé pour la matière " + matiere);
+      resolve(null);  // Pas de conflit
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la vérification des conflits de matière+classe:", error);
+      reject(error);
+    });
+  });
 }
 
 // ===== DASHBOARD ÉLÈVE =====

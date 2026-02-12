@@ -61,16 +61,18 @@
                     
                 </div>
                  <div class="form-content" id="eleve-register">
-                    <div id="eleve-register-error" class="error-message"></div>
+                     <div id="eleve-register-error" class="success-message"></div>
                     <div id="eleve-register-success" class="success-message"></div>
                     <form onsubmit="handleEleveRegister(event)" id="eleve-register-form">
                         <div class="form-group">
                             <label for="registrer-nom-eleve">Nom</label>
                             <input type="text" id="register-nom-eleve" placeholder="Votre nom" required>
+                            <div id="error-register-nom-eleve" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="register-prenom-eleve">Prénom</label>
                             <input type="text" id="register-prenom-eleve" placeholder="Votre prenom" required>
+                            <div id="error-register-prenom-eleve" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="register-classe-eleve">Choisissez votre classe</label>
@@ -89,14 +91,17 @@
                         <div class="form-group">
                             <label for="register-email-eleve">Email</label>
                             <input type="text" id="register-email-eleve" placeholder="Votre email.com" required>
+                             <div id="error-register-email-eleve" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="register-password-eleve">Mot de passe</label>
                             <input type="password" id="register-password-eleve" placeholder="........" required>
+                            <div id="error-register-password-eleve" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="register-password-confirm-eleve">Confirmer le mot de passe</label>
                             <input type="password" id="register-password-confirm-eleve" placeholder="........." required>
+                            <div id="error-register-passwordconfirm-eleve" class="error-message"></div>
                         </div>
                         <button type="submit" class="form-button">S'inscrire</button>
                     </form>
@@ -122,10 +127,12 @@
                             <div class="form-group">
                                  <label for="login-email-enseignant">Email</label>
                                  <input type="text"  id="login-email-enseignant" placeholder="entrez votre email.com" required>
+                                 <div id="enseignant-register-error" class="error-message"></div>
                             </div>
                             <div class="form-group">
                                 <label for="login-password-enseignant"> Mot de passe</label>
                                 <input type="password" id="login-password-enseignant" placeholder=".........." required>
+                                <div id="enseignant-register-error" class="error-message"></div>
                             </div>
                             <button type="submit" class="form-button">Se connecter</button>
                         </form>
@@ -133,20 +140,22 @@
                 </div>
                 </div>
                 <div class="form-content" id="enseignant-register">
-                    <div id="enseignant-register-error" class="error-message"></div>
                     <div id="enseignant-register-success" class="success-message"></div>
                     <form onsubmit="handleEnseignantRegister(event)" id="enseignant-register-form">
                         <div class="form-group">
                             <label for="registrer-nom-enseignant">Nom</label>
                             <input type="text" id="register-nom-enseignant" placeholder="Votre nom" required>
+                            <div id="error-register-nom-enseignant" class="error-message"></div>
                         </div>
                         <div class="form-group">
                             <label for="register-prenom-enseignant">Prénom</label>
                             <input type="text" id="register-prenom-enseignant" placeholder="Votre prenom" required>
+                            <div id="error-register-prenom-enseignant" class="error-message"></div>
                         </div>
                         <div class="form-group">
                               <label for="register-email-enseignant">Email</label>
                               <input type="text"  id="register-email-enseignant" placeholder="entrez votre email.com" required>
+                              <div id="error-register-email-enseignant" class="error-message"></div>
                         </div>
                         <div class="form-group">
                               <label for="register-subject-enseignant">Matière enseignée</label>
@@ -186,16 +195,18 @@
                                 <label style="display: flex; gap: 8px; font-weight: 400; cursor: pointer;">
                                     <input type="checkbox" name="classes" value="3ème A"> 3ème A
                                 </label>
-                                
+                                <div id="error-register-classe-enseignant" class="error-message"></div>
                             </div>
                         </div>
                         <div class="form-group">
                              <label for="register-password-enseignant"> Mot de passe</label>
                              <input type="password" id="register-password-enseignant" placeholder=".........." required>
+                             <div id="error-register-password-enseignant" class="error-message"></div>
                         </div>
                          <div class="form-group">
                             <label for="register-password-confirm-enseignant">Confirmer le mot de passe</label>
                             <input type="password" id="register-password-confirm-enseignant" placeholder="........." required>
+                            <div id="error-register-passwordconfirm-enseignant" class="error-message"></div>
                         </div>
                         <button type="submit" class="form-button"> S'inscrire</button>
                     </form>
