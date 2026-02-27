@@ -77,6 +77,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 40px 20px;
+            flex-wrap: wrap;
         }
 
         .container {
@@ -299,6 +300,7 @@
 
         .form-content.active {
             display: block;
+            padding: 20px;
         }
 
         .form-group {
@@ -307,28 +309,24 @@
                        
         .form-group input,
         .form-group select {
-         width: 100%;
+         width: 80%;
+         margin-left: 30px;
          padding: 10px;
          margin-bottom: 5px;
          border: 1px solid #ccc;
          border-radius: 5px;
         }
+     
         label {
-            display: block;
+            display: flex;
+            margin-left: 30px;
             margin-bottom: 8px;
             font-weight: 500;
             color: #333;
             font-size: 14px;
         }
 
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
+     
 
         input:focus, select:focus {
             outline: none;

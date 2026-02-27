@@ -174,7 +174,7 @@ function handleEleveRegister(event) {
   event.preventDefault();
   
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$/;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
   const email = document.getElementById("register-email-eleve").value.trim();
@@ -245,10 +245,9 @@ function handleEleveRegister(event) {
       });
     })
     .then(() => {
-      button.textContent = 'Inscription reussie';
-      button.classList.add("show");
-      successDiv.textContent = 'Inscription réussie,Veuillez vous connecter.';
-      successDiv.classList.add("show");
+      button.textContent = '✅ Inscription reussie';
+      button.classList.add("btn-success");
+    
       clearFormInputs('eleve-register-form');
       
       setTimeout(() => {
@@ -266,7 +265,8 @@ function handleEleveRegister(event) {
         button.disabled = false;
 
       if (error.code === 'auth/email-already-in-use') {
-        errorDiv.textContent = 'Cet email est déjà utilisé';
+        alert("cet email est déjà utilisée")
+        errorDiv.textContent = 'Cet email est déjà utilisée';
       } else if(error.code === 'permission denied') {
         errorDiv.textContent = 'erreur de permission firestore';
       } else {
@@ -350,7 +350,7 @@ function checkIfTeacher(uid) {
   event.preventDefault();
   
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$/;
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
   const email = document.getElementById("register-email-enseignant").value.trim();
@@ -469,6 +469,7 @@ function checkIfTeacher(uid) {
         button.disabled = false;
       
       if (error.code === 'auth/email-already-in-use') {
+        alert("cet email est déjà utilisée")
         errorDiv.textContent = 'Cet email est déjà utilisé';
       } else if(error.message.includes('déjà enseignée')) {
         errorDiv.textContent = error.message;
@@ -485,7 +486,6 @@ function checkIfTeacher(uid) {
     });
 }
 // Fonction pour vérifier les conflits de matière+classe pour les enseignants
-// Fonction CORRIGÉE pour vérifier les conflits
 function checkTeacherClassConflict(matiere, classes) {
   return new Promise((resolve, reject) => {
     console.log("🔍 Vérification conflit:", matiere, "Classes:", classes);
