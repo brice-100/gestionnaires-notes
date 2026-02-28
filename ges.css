@@ -41,6 +41,12 @@
 }
 /* Correction du responsive .cadre-grid */
 @media (max-width: 768px) {
+    #teacherDashboard {
+    display: none;
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
     .subtitle {
         font-size: 14px;
     }
@@ -55,14 +61,20 @@
         gap: 15px;
     }
     .students-table {
+          min-width: 500px;
         font-size: 12px;
     }
     .students-table th,
     .students-table td {
-        padding: 10px;
+          padding: 8px 6px;
+        white-space: nowrap;
     }
     .class-options {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .subject-section {
+        padding: 15px;
+        overflow-x: auto;
     }
 }
 
@@ -202,34 +214,6 @@
             font-size: 16px;
         }
 
-        @media (max-width: 768px) {
-            .subtitle {
-                font-size: 14px;
-            }
-
-            .cadre-grid {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .dashboard-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .students-table {
-                font-size: 12px;
-            }
-
-            .students-table th,
-            .students-table td {
-                padding: 10px;
-            }
-              .class-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
         .auth-page{
             display: none;
             min-height: 100vh;
