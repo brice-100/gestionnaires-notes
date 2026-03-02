@@ -67,7 +67,7 @@
     .students-table th,
     .students-table td {
           padding: 8px 6px;
-        white-space: nowrap;
+          white-space: nowrap;
     }
     .class-options {
         grid-template-columns: repeat(2, 1fr);

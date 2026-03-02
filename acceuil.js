@@ -418,7 +418,9 @@ function checkIfTeacher(uid) {
   checkTeacherClassConflict(matiere, classes)
     .then((conflict) => {
       if (conflict) {
+          alert (`veuillez choisir une autre matière car ${matiere} est déjà enseignée`)
         throw new Error( `❌ La matière "${matiere}" est déjà enseignée dans la classe "${conflict}". Choisissez une autre classe.`);
+      
       }
     })
     .then(() => {
